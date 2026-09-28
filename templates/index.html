@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discord Server Cloner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+    <div class="bg-orb orb-three"></div>
+
+    <div class="app-shell">
+      <header class="topbar glass-panel">
+        <div class="brand-wrap">
+          <div class="brand-mark">D</div>
+          <div>
+            <p class="eyebrow">Discord Clone Tool</p>
+            <h1>PANTHER DISCORD SERVER CLONER</h1>
+          </div>
+        </div>
+        <div class="status-pill" id="statusPill">Ready</div>
+      </header>
+
+      <main class="layout">
+        <section class="glass-panel form-panel">
+          <div class="section-header">
+            <h2>Clone Setup</h2>
+            <button id="loadConfigBtn" class="ghost-button small" type="button">Load saved config</button>
+          </div>
+
+          <div class="notice">
+            <strong>Bot token only.</strong> Discord bots servers create nahi kar sakte &mdash; isliye
+            source <em>aur</em> target dono me bot ko invite karo, Manage Roles / Manage Channels /
+            Manage Server / Manage Emojis diye hue. User token (self-bot) use mat karo, account ban
+            ho jayega.
+          </div>
+
+          <div class="field-group">
+            <label for="token">Bot Token</label>
+            <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
+                   placeholder="MTIz... paste from Developer Portal &rarr; Bot &rarr; Reset Token" />
+            <span class="hint" id="tokenHint">Token sirf localhost dashboard me rehta hai, config.json me save hota hai.</span>
+          </div>
+
+          <div class="two-col">
+            <div class="field-group">
+              <label for="sourceGuildId">Source Guild ID</label>
+              <input id="sourceGuildId" type="text" inputmode="numeric" placeholder="1234567890123456789" />
+              <span class="hint">Settings &rarr; Advanced &rarr; Developer Mode ON, phir server name par right-click &rarr; Copy ID.</span>
+            </div>
+            <div class="field-group">
+              <label for="targetGuildId">Target Guild ID</label>
+              <input id="targetGuildId" type="text" inputmode="numeric" placeholder="9876543210987654321" />
+              <span class="hint">Khali (empty) server banao, bot ko admin ke saath invite karo.</span>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <span class="group-label">Server</span>
+            <div class="option-grid">
+              <label class="toggle"><input type="checkbox" id="serverName" /> <span>Name</span></label>
+              <label class="toggle"><input type="checkbox" id="serverIcon" /> <span>Icon</span></label>
+              <label class="toggle"><input type="checkbox" id="serverBanner" /> <span>Banner</span></label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <span class="group-label">Structure</span>
+            <div class="option-grid three">
+              <label class="toggle"><input type="checkbox" id="roles" /> <span>Roles</span></label>
+              <label class="toggle"><input type="checkbox" id="categories" /> <span>Categories</span></label>
+              <label class="toggle"><input type="checkbox" id="channels" /> <span>Channels</span></label>
+            </div>
+          </div>
+
+          <div class="option-group">
+            <span class="group-label">Details</span>
+            <div class="option-grid three">
+              <label class="toggle"><input type="checkbox" id="settings" /> <span>Channel settings</span></label>
+              <label class="toggle"><input type="checkbox" id="permissions" /> <span>Permission overwrites</span></label>
+              <label class="toggle"><input type="checkbox" id="emojis" /> <span>Emojis</span></label>
+              <label class="toggle"><input type="checkbox" id="stickers" /> <span>Stickers</span></label>
+              <label class="toggle"><input type="checkbox" id="dryRun" /> <span>Dry run (preview only)</span></label>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button id="startCloneBtn" class="primary-button" type="button">Start clone</button>
+            <button id="stopCloneBtn" class="ghost-button danger" type="button" disabled>Stop</button>
+            <button id="resetBtn" class="ghost-button" type="button">Reset</button>
+          </div>
+        </section>
+
+        <aside class="glass-panel output-panel">
+          <div class="section-header">
+            <h2>Live output</h2>
+            <button id="clearLogBtn" class="ghost-button small" type="button">Clear</button>
+          </div>
+
+          <div id="jobInfo" class="job-info">
+            <span class="dot"></span>
+            <span id="jobInfoText">Waiting for start...</span>
+          </div>
+          <pre id="logOutput" class="log-output">No logs yet.</pre>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        Roles, categories, channels (text / voice / stage / forum / announcement), channel settings
+        aur permission overwrites copy hote hain. Target ke existing channels kabhi delete nahi hote.
+      </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>
