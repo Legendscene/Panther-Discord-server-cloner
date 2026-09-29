@@ -1,0 +1,29 @@
+[project]
+name = "discord-server-cloner"
+version = "1.0.0"
+description = "Clone a Discord server (roles, categories, channels, settings, permissions) into another one"
+requires-python = ">=3.10"
+dependencies = [
+    "discord.py>=2.4.0",
+    "aiohttp>=3.9.0",
+    "Flask>=3.0.0",
+    "pywebview>=5.0.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = [".venv", "__pycache__", "logs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "UP", "SIM", "RET", "C4", "I"]
+ignore = ["E501", "BLE001", "RET504", "SIM105"]
+
+[tool.ruff.lint.per-file-ignores]
+"test_cloner.py" = ["E402"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+warn_unused_ignores = true
+files = ["main.py", "cloner.py", "web_app.py"]

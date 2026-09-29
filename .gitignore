@@ -3,3 +3,23 @@ logs/
 .venv/
 __pycache__/
 *.pyc
+
+# Python tooling caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# IDE / editor user state
+.vs/
+
+# C++ build artifacts
+UI/out/
+
+# PyInstaller build artifacts
+dist/
+build/
+*.spec
+
+# local tool leftovers
+.freebuff/
+*.ico.bak

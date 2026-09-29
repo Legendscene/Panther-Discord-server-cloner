@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import discord
 
 sys.path.insert(0, ".")
-from cloner import CloneOptions, ServerCloner  # noqa: E402
+from cloner import CloneOptions, ServerCloner
 
 TARGET_METHODS = {
     "create_text_channel": discord.Guild.create_text_channel,
@@ -100,7 +100,7 @@ c = ServerCloner(src, dst, CloneOptions())
 c.role_map = {999: admin_dst}
 mapped = c.overwrites_for(make_source_ch("x", TYPES["text"], overwrites={everyone_src: ow_everyone, admin_src: ow_admin}))
 ids = sorted(getattr(k, "id", -1) for k in mapped)
-check("overwrites: @everyone + role dono mapped", ids == [222, 1234], str(ids))
+check("overwrites: @everyone + role both mapped", ids == [222, 1234], str(ids))
 check(
     "overwrites: unknown role skipped",
     sorted(getattr(k, "id", -1) for k in ServerCloner(src, dst, CloneOptions()).overwrites_for(
@@ -138,7 +138,7 @@ for label, ctype in TYPES.items():
                 valid, detail = True, ""
             except TypeError as e:
                 valid, detail = False, str(e)
-            tag = f"{label:<6} settings={str(with_settings):<5} perms={str(with_perms):<5}"
+            tag = f"{label:<6} settings={with_settings!s:<5} perms={with_perms!s:<5}"
             check(tag, valid, detail)
             if label == "stage" and with_settings:
                 check(f"{tag} topic handled", kwargs.get("topic") or post.get("topic"), str(kwargs) + str(post))

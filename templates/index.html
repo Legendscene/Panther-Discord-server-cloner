@@ -1,119 +1,264 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discord Server Cloner</title>
+    <title>Quantum Devs Discord Server Cloner</title>
+    <meta name="description" content="Clone a Discord server with roles, categories, channels, permissions, emojis and stickers." />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <div class="bg-orb orb-one"></div>
-    <div class="bg-orb orb-two"></div>
-    <div class="bg-orb orb-three"></div>
+    <!-- ambient background layers -->
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="noise-bg" aria-hidden="true"></div>
 
     <div class="app-shell">
-      <header class="topbar glass-panel">
-        <div class="brand-wrap">
-          <div class="brand-mark">D</div>
-          <div>
-            <p class="eyebrow">Discord Clone Tool</p>
-            <h1>PANTHER DISCORD SERVER CLONER</h1>
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div class="brand-wrap">
+            <img class="brand-mark" src="/logo.png" alt="Quantum Devs" width="40" height="40" />
+            <div class="brand-text">
+              <span class="eyebrow">Discord Clone Tool</span>
+              <h1 class="brand-title">QUANTUM DEVS</h1>
+            </div>
           </div>
+
+          <nav class="topbar-actions">
+            <div class="status-pill" id="statusPill" data-tone="ready">
+              <span class="status-dot"></span>
+              <span id="statusText">Ready</span>
+            </div>
+            <button id="themeToggleBtn" class="icon-button" type="button" aria-label="Toggle theme" title="Toggle theme">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                <circle cx="12" cy="12" r="4.2" />
+                <path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" />
+              </svg>
+            </button>
+            <a id="supportBtn" class="ghost-button small" href="https://discord.gg/zwWuyMmxFc" target="_blank" rel="noopener noreferrer">
+              Support Server
+            </a>
+          </nav>
         </div>
-        <div class="status-pill" id="statusPill">Ready</div>
       </header>
 
-      <main class="layout">
-        <section class="glass-panel form-panel">
-          <div class="section-header">
-            <h2>Clone Setup</h2>
-            <button id="loadConfigBtn" class="ghost-button small" type="button">Load saved config</button>
-          </div>
-
-          <div class="notice">
-            <strong>Bot token only.</strong> Discord bots servers create nahi kar sakte &mdash; isliye
-            source <em>aur</em> target dono me bot ko invite karo, Manage Roles / Manage Channels /
-            Manage Server / Manage Emojis diye hue. User token (self-bot) use mat karo, account ban
-            ho jayega.
-          </div>
-
-          <div class="field-group">
-            <label for="token">Bot Token</label>
-            <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
-                   placeholder="MTIz... paste from Developer Portal &rarr; Bot &rarr; Reset Token" />
-            <span class="hint" id="tokenHint">Token sirf localhost dashboard me rehta hai, config.json me save hota hai.</span>
-          </div>
-
-          <div class="two-col">
-            <div class="field-group">
-              <label for="sourceGuildId">Source Guild ID</label>
-              <input id="sourceGuildId" type="text" inputmode="numeric" placeholder="1234567890123456789" />
-              <span class="hint">Settings &rarr; Advanced &rarr; Developer Mode ON, phir server name par right-click &rarr; Copy ID.</span>
-            </div>
-            <div class="field-group">
-              <label for="targetGuildId">Target Guild ID</label>
-              <input id="targetGuildId" type="text" inputmode="numeric" placeholder="9876543210987654321" />
-              <span class="hint">Khali (empty) server banao, bot ko admin ke saath invite karo.</span>
-            </div>
-          </div>
-
-          <div class="option-group">
-            <span class="group-label">Server</span>
-            <div class="option-grid">
-              <label class="toggle"><input type="checkbox" id="serverName" /> <span>Name</span></label>
-              <label class="toggle"><input type="checkbox" id="serverIcon" /> <span>Icon</span></label>
-              <label class="toggle"><input type="checkbox" id="serverBanner" /> <span>Banner</span></label>
-            </div>
-          </div>
-
-          <div class="option-group">
-            <span class="group-label">Structure</span>
-            <div class="option-grid three">
-              <label class="toggle"><input type="checkbox" id="roles" /> <span>Roles</span></label>
-              <label class="toggle"><input type="checkbox" id="categories" /> <span>Categories</span></label>
-              <label class="toggle"><input type="checkbox" id="channels" /> <span>Channels</span></label>
-            </div>
-          </div>
-
-          <div class="option-group">
-            <span class="group-label">Details</span>
-            <div class="option-grid three">
-              <label class="toggle"><input type="checkbox" id="settings" /> <span>Channel settings</span></label>
-              <label class="toggle"><input type="checkbox" id="permissions" /> <span>Permission overwrites</span></label>
-              <label class="toggle"><input type="checkbox" id="emojis" /> <span>Emojis</span></label>
-              <label class="toggle"><input type="checkbox" id="stickers" /> <span>Stickers</span></label>
-              <label class="toggle"><input type="checkbox" id="dryRun" /> <span>Dry run (preview only)</span></label>
-            </div>
-          </div>
-
-          <div class="action-row">
-            <button id="startCloneBtn" class="primary-button" type="button">Start clone</button>
-            <button id="stopCloneBtn" class="ghost-button danger" type="button" disabled>Stop</button>
-            <button id="resetBtn" class="ghost-button" type="button">Reset</button>
+      <main class="page">
+        <!-- ============ HERO ============ -->
+        <section class="hero reveal">
+          <p class="hero-eyebrow">Quantum Devs</p>
+          <h2 class="hero-title">DISCORD SERVER<br /><span class="text-gradient">CLONER</span></h2>
+          <p class="hero-sub">
+            Replicate a Discord server in seconds &mdash; roles, categories, channels, permission
+            overwrites, emojis and stickers, all mapped onto an empty target server.
+          </p>
+          <div class="hero-meta">
+            <span class="meta-chip"><span class="meta-pulse"></span> Local dashboard</span>
+            <span class="meta-chip">Step-by-step setup</span>
+            <span class="meta-chip">Resume-safe</span>
           </div>
         </section>
 
-        <aside class="glass-panel output-panel">
-          <div class="section-header">
-            <h2>Live output</h2>
-            <button id="clearLogBtn" class="ghost-button small" type="button">Clear</button>
+        <!-- ============ WIZARD ============ -->
+        <section class="card reveal wizard" id="wizard" data-step="1">
+          <!-- stepper -->
+          <nav class="stepper" aria-label="Setup steps">
+            <button class="step-dot is-active" type="button" data-step="1">
+              <span class="step-num">01</span>
+              <span class="step-name">Connect</span>
+            </button>
+            <span class="step-line" data-line="1"></span>
+            <button class="step-dot" type="button" data-step="2" disabled>
+              <span class="step-num">02</span>
+              <span class="step-name">Payload</span>
+            </button>
+            <span class="step-line" data-line="2"></span>
+            <button class="step-dot" type="button" data-step="3" disabled>
+              <span class="step-num">03</span>
+              <span class="step-name">Output</span>
+            </button>
+          </nav>
+
+          <!-- ---------- STEP 1 : CONNECT ---------- -->
+          <div class="step-panel is-active" data-panel="1">
+            <div class="section-header">
+              <div>
+                <span class="section-eyebrow">Step 01 &mdash; Connect</span>
+                <h2 class="section-title">Clone Setup</h2>
+              </div>
+              <button id="loadConfigBtn" class="ghost-button small" type="button">Load saved</button>
+            </div>
+
+            <div class="notice">
+              <strong>Bot token or user token.</strong> Discord bots can't create servers, so the bot or account needs to be
+              invited to <em>both</em> the source and the target server with Manage Roles, Manage
+              Channels, Manage Server and Manage Emojis.
+            </div>
+
+            <div class="field">
+              <label for="tokenType">Token Type</label>
+              <div class="input-wrap">
+                <select id="tokenType" name="tokenType">
+                  <option value="bot">Bot Token</option>
+                  <option value="user">User Token</option>
+                </select>
+              </div>
+              <span class="hint" id="tokenTypeHint"></span>
+            </div>
+
+            <div class="field">
+              <label for="token">Token</label>
+              <div class="input-wrap">
+                <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
+                       placeholder="Bot token (MTIz...) or user token (MTQ2...)" />
+              </div>
+              <span class="hint" id="tokenHint">Kept in memory for this tab only &mdash; never written to config.json.</span>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="sourceGuildId">Source Guild ID</label>
+                <div class="input-wrap">
+                  <input id="sourceGuildId" type="text" inputmode="numeric" placeholder="1234567890123456789" />
+                </div>
+                <span class="hint">Developer Mode ON, then right-click the server name &rarr; Copy ID.</span>
+              </div>
+
+              <div class="field">
+                <label for="targetGuildId">Target Guild ID</label>
+                <div class="input-wrap">
+                  <input id="targetGuildId" type="text" inputmode="numeric" placeholder="9876543210987654321" />
+                </div>
+                <span class="hint">Use an empty server with the bot/account having the right permissions.</span>
+              </div>
+            </div>
           </div>
 
-          <div id="jobInfo" class="job-info">
-            <span class="dot"></span>
-            <span id="jobInfoText">Waiting for start...</span>
+          <!-- ---------- STEP 2 : PAYLOAD ---------- -->
+          <div class="step-panel" data-panel="2">
+            <div class="section-header">
+              <div>
+                <span class="section-eyebrow">Step 02 &mdash; Payload</span>
+                <h2 class="section-title">What To Clone</h2>
+              </div>
+              <span class="counter-chip" id="optionCount">0 selected</span>
+            </div>
+
+            <div class="option-group">
+              <span class="group-label">Server</span>
+              <div class="option-grid three">
+                <label class="toggle"><input type="checkbox" id="serverName" /><span class="toggle-box"></span><span>Name</span></label>
+                <label class="toggle"><input type="checkbox" id="serverIcon" /><span class="toggle-box"></span><span>Icon</span></label>
+                <label class="toggle"><input type="checkbox" id="serverBanner" /><span class="toggle-box"></span><span>Banner</span></label>
+              </div>
+            </div>
+
+            <div class="option-group">
+              <span class="group-label">Structure</span>
+              <div class="option-grid three">
+                <label class="toggle"><input type="checkbox" id="roles" /><span class="toggle-box"></span><span>Roles</span></label>
+                <label class="toggle"><input type="checkbox" id="categories" /><span class="toggle-box"></span><span>Categories</span></label>
+                <label class="toggle"><input type="checkbox" id="channels" /><span class="toggle-box"></span><span>Channels</span></label>
+              </div>
+            </div>
+
+            <div class="option-group">
+              <span class="group-label">Details</span>
+              <div class="option-grid three">
+                <label class="toggle"><input type="checkbox" id="settings" /><span class="toggle-box"></span><span>Channel settings</span></label>
+                <label class="toggle"><input type="checkbox" id="permissions" /><span class="toggle-box"></span><span>Permission overwrites</span></label>
+                <label class="toggle"><input type="checkbox" id="emojis" /><span class="toggle-box"></span><span>Emojis</span></label>
+                <label class="toggle"><input type="checkbox" id="stickers" /><span class="toggle-box"></span><span>Stickers</span></label>
+                <label class="toggle"><input type="checkbox" id="cleanTarget" checked /><span class="toggle-box"></span><span>Clean target (delete existing first)</span></label>
+                <label class="toggle"><input type="checkbox" id="dryRun" /><span class="toggle-box"></span><span>Dry run (preview only)</span></label>
+              </div>
+            </div>
+
+            <button id="startCloneBtn" class="primary-button launch" type="button">
+              <span class="launch-glow" aria-hidden="true"></span>
+              <span class="launch-label">Start Cloning</span>
+              <svg class="launch-arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </button>
           </div>
-          <pre id="logOutput" class="log-output">No logs yet.</pre>
-        </aside>
+
+          <!-- ---------- STEP 3 : OUTPUT ---------- -->
+          <div class="step-panel" data-panel="3">
+            <div class="section-header">
+              <div>
+                <span class="section-eyebrow">Step 03 &mdash; Output</span>
+                <h2 class="section-title">Live Output</h2>
+              </div>
+              <div class="terminal-actions">
+                <label class="autoscroll-toggle">
+                  <input type="checkbox" id="autoScrollToggle" checked />
+                  <span class="toggle-box"></span>
+                  <span>Auto-scroll</span>
+                </label>
+                <button id="clearLogBtn" class="ghost-button small" type="button">Clear</button>
+                <button id="stopCloneBtn" class="stop-button" type="button" disabled>
+                  <span class="stop-icon" aria-hidden="true"></span>
+                  <span>Stop Cloning</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat"><span class="stat-label">Status</span><span class="stat-value" id="statStatus">Idle</span></div>
+              <div class="stat"><span class="stat-label">Elapsed</span><span class="stat-value" id="statElapsed">00:00</span></div>
+              <div class="stat"><span class="stat-label">Log lines</span><span class="stat-value" id="statLines">0</span></div>
+              <div class="stat"><span class="stat-label">Exit code</span><span class="stat-value" id="statExit">&mdash;</span></div>
+            </div>
+
+            <div class="progress-track" id="progressTrack" data-active="false">
+              <div class="progress-bar"></div>
+            </div>
+
+            <div id="jobInfo" class="job-info" data-tone="ready">
+              <span class="dot"></span>
+              <span id="jobInfoText">Waiting for start...</span>
+            </div>
+
+            <pre id="logOutput" class="log-output">No logs yet.</pre>
+          </div>
+
+          <!-- ---------- NAV ---------- -->
+          <div class="wizard-nav">
+            <button id="backBtn" class="ghost-button" type="button" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H6M11 18l-6-6 6-6" />
+              </svg>
+              <span>Back</span>
+            </button>
+            <span class="wizard-spacer"></span>
+            <button id="resetBtn" class="ghost-button" type="button" hidden>Start over</button>
+            <button id="nextBtn" class="next-button" type="button">
+              <span>Continue</span>
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h13M13 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <footer class="footer reveal">
+          <p>
+            Text, voice, stage, forum and announcement channels are copied along with their settings
+            and permission overwrites. Existing channels on the target are never deleted.
+          </p>
+          <div class="footer-meta">
+            <span class="footer-brand">QUANTUM DEVS</span>
+            <span class="footer-sep"></span>
+            <span class="footer-dev">Developer &mdash; <strong>PANTHER</strong></span>
+          </div>
+        </footer>
       </main>
-
-      <footer class="footer">
-        Roles, categories, channels (text / voice / stage / forum / announcement), channel settings
-        aur permission overwrites copy hote hain. Target ke existing channels kabhi delete nahi hote.
-      </footer>
     </div>
 
     <script src="/static/script.js"></script>
