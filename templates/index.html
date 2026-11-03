@@ -95,13 +95,14 @@
             </div>
 
             <div class="notice">
-              <strong>Bot token or user token.</strong> Discord bots can't create servers, so the bot or account needs to be
-              invited to <em>both</em> the source and the target server with Manage Roles, Manage
-              Channels, Manage Server and Manage Emojis.
+              <strong>Choose a separate login mode.</strong> For Bot Login, create/manage the bot in the
+              Developer Portal and invite it to <em>both</em> servers. For User Login, paste a token you
+              already have from your PC; Discord does not provide an official way to reveal a user token
+              inside the mobile app.
             </div>
 
             <div class="field">
-              <label for="tokenType">Token Type</label>
+              <label for="tokenType">Login As</label>
               <div class="input-wrap">
                 <select id="tokenType" name="tokenType">
                   <option value="bot">Bot Token</option>
@@ -117,7 +118,7 @@
                 <input id="token" name="token" type="password" autocomplete="off" spellcheck="false"
                        placeholder="Bot token (MTIz...) or user token (MTQ2...)" />
               </div>
-              <span class="hint" id="tokenHint">Kept in memory for this tab only &mdash; never written to config.json.</span>
+               <span class="hint" id="tokenHint">Kept in memory for this tab only &mdash; never written to config.json.</span>
             </div>
 
             <div class="field-row">

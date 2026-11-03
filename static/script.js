@@ -3,8 +3,8 @@ const $ = (id) => document.getElementById(id);
 document.documentElement.classList.add('js');
 
 const TOKEN_TYPE_HINTS = {
-  bot: 'Developer Portal > Bot > Reset Token. The bot needs Manage Roles/Channels/Server/Emojis in both servers.',
-  user: 'From the Discord desktop app: press Ctrl+Shift+I > Network tab > F5 > click the first request > Request Headers > copy the "authorization" value. It must NOT have a "Bot " prefix.'
+  bot: 'Phone or PC: Developer Portal > your application > Bot > Reset Token. Invite the bot to both servers with Manage Roles/Channels/Server/Emojis.',
+  user: 'Mobile Discord does not officially reveal user tokens. Paste a user token you already obtained on your PC; it must NOT have a "Bot " prefix.'
 };
 
 function tokenTypeHintText(type) {
@@ -181,7 +181,7 @@ function validateStepOne(showFeedback = true) {
   return true;
 }
 
-function goToStep(step, direction = 'forward') {
+function goToStep(step, direction = 'forward', shouldScroll = true) {
   if (!STEPS.includes(step)) {
     return;
   }
@@ -210,7 +210,7 @@ function goToStep(step, direction = 'forward') {
   }
   const rect = el.wizard.getBoundingClientRect();
   const topBarOffset = 90;
-  if (rect.top < topBarOffset || rect.top > window.innerHeight * 0.4) {
+  if (shouldScroll && (rect.top < topBarOffset || rect.top > window.innerHeight * 0.4)) {
     el.wizard.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
@@ -646,7 +646,11 @@ function clearLog() {
 
 function updateTokenTypeHint() {
   if (el.tokenTypeHint) {
-    el.tokenTypeHint.textContent = tokenTypeHintText(el.tokenType ? el.tokenType.value : 'bot');
+    const type = el.tokenType ? el.tokenType.value : 'bot';
+    el.tokenTypeHint.textContent = tokenTypeHintText(type);
+    if (el.token) {
+      el.token.placeholder = type === 'bot' ? 'Bot token from Developer Portal' : 'User token from your PC';
+    }
   }
 }
 
@@ -664,7 +668,7 @@ function resetForm() {
   el.tokenHint.textContent = 'Kept in memory for this tab only — never written to config.json.';
   currentStep = 1;
   maxUnlocked = 1;
-  goToStep(1, 'back');
+  goToStep(1, 'back', false);
   setRunning(false);
   clearLog();
 }

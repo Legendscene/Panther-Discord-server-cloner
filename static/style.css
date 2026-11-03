@@ -294,7 +294,7 @@ h6 {
   flex: none;
   object-fit: contain;
   border-radius: 11px;
-  box-shadow: 0 0 20px #ff235745, 0 0 44px #ff235724;
+  box-shadow: none;
 }
 
 .brand-text {

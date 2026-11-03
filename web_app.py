@@ -91,6 +91,14 @@ DEFAULTS: dict = {
 SESSION_TOKEN = ""
 
 
+def normalize_token(value: str) -> str:
+    """Keep the dashboard payload compatible with discord.py token input."""
+    token = str(value or "").strip().strip('"').strip("'")
+    if token[:4].lower() == "bot ":
+        token = token[4:].strip()
+    return token
+
+
 def worker_payload(payload: dict) -> dict:
     options = payload.get("options")
     options = options if isinstance(options, dict) else {}
@@ -235,7 +243,7 @@ def normalize_options(data: dict) -> dict:
 
 
 def normalize_payload(data: dict) -> dict:
-    token = str(data.get("token", "") or "").strip()
+    token = normalize_token(data.get("token", ""))
     if token in ("", TOKEN_MASK):
         token = SESSION_TOKEN
     token_type = str(data.get("token_type", "") or "").strip().lower()
@@ -245,7 +253,7 @@ def normalize_payload(data: dict) -> dict:
     if token_type not in ("bot", "user"):
         token_type = "bot"
     return {
-        "token": token.strip('"').strip("'"),
+        "token": token,
         "token_type": token_type,
         "source_guild_id": str(data.get("source_guild_id", "") or "").strip(),
         "target_guild_id": str(data.get("target_guild_id", "") or "").strip(),

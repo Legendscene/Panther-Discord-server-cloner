@@ -48,6 +48,22 @@ USER_AGENT = (
 )
 
 
+def normalize_token(value: str) -> str:
+    """Return the raw token expected by discord.py.
+
+    discord.py adds the ``Bot `` authorization prefix itself.  The Developer
+    Portal normally copies a raw token, but users sometimes paste the full
+    ``Bot <token>`` header from a guide or a terminal.  Passing that header to
+    the library produces ``Bot Bot <token>`` and Discord rejects the login.
+    Keep this normalization in one place so dashboard, worker, and CLI runs
+    behave identically.
+    """
+    token = str(value or "").strip().strip('"').strip("'")
+    if token[:4].lower() == "bot ":
+        token = token[4:].strip()
+    return token
+
+
 def die(msg: str, code: int = 1):
     print(f"[X] {msg}", flush=True)
     raise SystemExit(code)
@@ -413,9 +429,10 @@ async def execute_clone(
     if token_type not in ("bot", "user"):
         die(f"Invalid token_type '{token_type}'. Use 'bot' or 'user'.")
 
-    # Bot tokens need the "Bot " prefix; user tokens must NOT have it.
-    if token_type == "bot" and not token.startswith("Bot "):
-        token = f"Bot {token}"
+    # discord.py builds the Authorization header itself ('Bot ' + token) and
+    # the gateway IDENTIFY must carry the bare token, so the library must
+    # ALWAYS receive the raw token here.
+    token = normalize_token(token)
 
     intents = discord.Intents.none()
     intents.guilds = True
@@ -616,13 +633,9 @@ async def main() -> None:
         die(f"token_type '{token_type}' is invalid. It must be 'bot' or 'user'.")
 
     token = os.environ.get("DISCORD_TOKEN") or args.token or saved.get("token") or ""
-    token = str(token).strip().strip('"').strip("'")
+    token = normalize_token(token)
     if not token or token in ("YOUR_DISCORD_BOT_TOKEN", "YOUR_TOKEN"):
         die("token missing. Provide it via --token, the DISCORD_TOKEN env var, or config.json.")
-
-    # strip "Bot " prefix if present (we re-add in execute_clone based on type)
-    if token.startswith("Bot "):
-        token = token[4:].strip()
 
     source_raw = args.source or saved.get("source_guild_id")
     target_raw = args.target or saved.get("target_guild_id")
