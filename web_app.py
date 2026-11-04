@@ -87,8 +87,11 @@ DEFAULTS: dict = {
 }
 
 # The token (bot or user) is deliberately never written to disk. It only ever
-# lives in this process's memory for the lifetime of the dashboard.
+# lives in this process's memory for the lifetime of the dashboard. The type is
+# tracked too, so a cached user token is never silently reused as a bot token
+# (or the reverse) after the dashboard switches login modes.
 SESSION_TOKEN = ""
+SESSION_TOKEN_TYPE = ""
 
 
 def normalize_token(value: str) -> str:
@@ -244,14 +247,17 @@ def normalize_options(data: dict) -> dict:
 
 def normalize_payload(data: dict) -> dict:
     token = normalize_token(data.get("token", ""))
-    if token in ("", TOKEN_MASK):
-        token = SESSION_TOKEN
     token_type = str(data.get("token_type", "") or "").strip().lower()
     if token_type not in ("bot", "user"):
         saved = read_config().get("token_type", "bot")
         token_type = str(saved).strip().lower() if saved else "bot"
     if token_type not in ("bot", "user"):
         token_type = "bot"
+    if token in ("", TOKEN_MASK):
+        # Only reuse the cached session for the same login mode. Reusing a
+        # user token as a bot token (or the reverse) always fails at Discord
+        # with a confusing LoginFailure.
+        token = SESSION_TOKEN if token_type == SESSION_TOKEN_TYPE else ""
     return {
         "token": token,
         "token_type": token_type,
@@ -428,8 +434,9 @@ def append_log(job: dict, line: str, log_path: Path) -> None:
 
 
 def start_job(payload: dict) -> str:
-    global SESSION_TOKEN
+    global SESSION_TOKEN, SESSION_TOKEN_TYPE
     SESSION_TOKEN = payload["token"]
+    SESSION_TOKEN_TYPE = payload.get("token_type", "bot")
     job_id = str(uuid.uuid4())
     log_path = LOG_DIR / f"{job_id}.log"
     job: dict = {
@@ -531,7 +538,7 @@ def api_config():
         {
             "has_token": bool(SESSION_TOKEN),
             "token": TOKEN_MASK if SESSION_TOKEN else "",
-            "token_type": read_config().get("token_type", "bot"),
+            "token_type": SESSION_TOKEN_TYPE or read_config().get("token_type", "bot"),
             "source_guild_id": read_config().get("source_guild_id", ""),
             "target_guild_id": read_config().get("target_guild_id", ""),
             "options": read_config().get("options", DEFAULTS["options"]),
