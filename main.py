@@ -535,6 +535,7 @@ async def execute_clone(
                 print(f"emojis   : {len([e for e in src.emojis if e.name]) if options.emojis else 0}", flush=True)
                 print(f"stickers : {len(list(src.stickers)) if options.stickers else 0}", flush=True)
                 print(f"target currently has: {[c.name for c in dst.channels]}", flush=True)
+                state["ok"] = True
                 return
 
             if require_confirmation and not ask(
@@ -547,6 +548,7 @@ async def execute_clone(
                 default=False,
             ):
                 print("Cancelled.", flush=True)
+                state["ok"] = True
                 return
 
             cloner = ServerCloner(src, dst, options)
